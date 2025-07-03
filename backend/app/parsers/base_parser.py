@@ -1,3 +1,5 @@
+"""Base classes for file parsing."""
+
 from __future__ import annotations
 
 from fastapi import UploadFile

@@ -1,8 +1,16 @@
 # SheetMind
 
-SheetMind é um SaaS para diagnóstico inteligente de planilhas e documentos financeiros. Esta versão inclui a base para utilização de agentes com CrewAI e estrutura inicial para integração com Docling.
+SheetMind é uma aplicação SaaS que permite criar agentes inteligentes capazes de interpretar planilhas e documentos financeiros. Os arquivos enviados pelos usuários são processados pelo Docling e servem como contexto para agentes baseados em CrewAI responderem perguntas via chat.
 
-## Instalação
+## Tecnologias
+
+- **FastAPI** – back‑end e APIs REST
+- **CrewAI** – orquestração dos agentes de IA
+- **Docling** – parsing e estruturação de arquivos
+- **React + Vite** – front‑end SPA
+- **TailwindCSS** – estilos
+
+## Como executar localmente
 
 ### Back-end
 
@@ -22,57 +30,10 @@ npm install
 npm run dev
 ```
 
-## Exemplos de uso da API
+### Fluxo principal
 
-### Criar agente
+1. **Upload** – o usuário seleciona arquivos relacionados ao agente.
+2. **Processamento** – o back-end utiliza o Docling para ler os dados e associa o documento ao agente.
+3. **Interação** – o usuário envia perguntas e o agente responde considerando o contexto dos arquivos enviados.
 
-```http
-POST /agents
-{
-  "name": "Finance Bot",
-  "description": "Auxilia na análise de planilhas",
-  "objective": "Responder dúvidas financeiras",
-  "context_files": ["demo.xlsx"]
-}
-```
-
-### Perguntar ao agente
-
-```http
-POST /agents/{agent_id}/ask
-{
-  "question": "Qual o lucro deste mês?"
-}
-```
-
-As respostas ainda são simuladas, mas a estrutura está pronta para evolução com CrewAI e Docling.
-
-### Enviar arquivos de contexto para um agente
-
-```http
-POST /agents/{agent_id}/context
-Content-Type: multipart/form-data
-files: [planilha.xlsx, relatorio.pdf]
-```
-
-### Estrutura de agente com documentos associados
-
-```json
-{
-  "id": "123",
-  "name": "Finance Bot",
-  "description": "Auxilia na análise de planilhas",
-  "objective": "Responder dúvidas financeiras",
-  "context_files": ["planilha.xlsx", "relatorio.pdf"],
-  "context_docs": ["doc1", "doc2"]
-}
-```
-
-### Pergunta considerando o contexto
-
-```http
-POST /agents/{agent_id}/ask
-{
-  "question": "Liste os totais presentes na planilha"
-}
-```
+Para exemplos mais detalhados de requisições, consulte a documentação da API em `docs/ARQUITETURA.md`.

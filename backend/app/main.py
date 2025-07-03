@@ -1,3 +1,5 @@
+"""Application entry point and router registration."""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

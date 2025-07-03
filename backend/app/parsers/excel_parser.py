@@ -1,3 +1,5 @@
+"""Excel parser that converts sheets to Docling tables."""
+
 from __future__ import annotations
 
 import pandas as pd

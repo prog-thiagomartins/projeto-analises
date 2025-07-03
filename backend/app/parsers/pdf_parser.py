@@ -1,3 +1,5 @@
+"""PDF parser that extracts text and splits pages."""
+
 from __future__ import annotations
 
 from fastapi import UploadFile

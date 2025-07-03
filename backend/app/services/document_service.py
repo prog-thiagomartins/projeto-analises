@@ -24,6 +24,7 @@ class DocumentService:
         }
 
     def _select_parser(self, suffix: str) -> BaseParser:
+        """Return the parser responsible for a given file suffix."""
         parser = self.parsers.get(suffix)
         if not parser:
             raise ValueError(f"Unsupported file type: {suffix}")
@@ -48,7 +49,9 @@ class DocumentService:
         return doc
 
     def list_documents(self) -> List[Document]:
+        """Return all parsed documents."""
         return list(self.documents.values())
 
     def get_document(self, doc_id: str) -> Document | None:
+        """Retrieve a single document by id."""
         return self.documents.get(doc_id)

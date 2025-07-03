@@ -1,3 +1,5 @@
+"""Routes for managing raw documents outside of agents."""
+
 from fastapi import APIRouter
 
 from ...models.document import Document, DocumentCreate

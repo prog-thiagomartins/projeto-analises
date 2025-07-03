@@ -26,18 +26,22 @@ class AgentService:
         self.doc_service = DocumentService()
 
     def create_agent(self, data: AgentCreate) -> Agent:
+        """Instantiate and register a new agent."""
         agent = Agent.from_create(data)
         self.agents[agent.id] = agent
         self.contexts[agent.id] = []
         return agent
 
     def list_agents(self) -> List[Agent]:
+        """Return all registered agents."""
         return list(self.agents.values())
 
     def get_agent(self, agent_id: str) -> Agent | None:
+        """Retrieve a single agent by id."""
         return self.agents.get(agent_id)
 
     def add_context(self, agent_id: str, files: List[UploadFile]) -> List[Document]:
+        """Attach uploaded files as context to an agent."""
         agent = self.get_agent(agent_id)
         if not agent:
             raise KeyError("Agent not found")
@@ -49,6 +53,7 @@ class AgentService:
         return docs
 
     def ask_agent(self, agent_id: str, question: str) -> str:
+        """Return the agent answer for a given question."""
         agent = self.get_agent(agent_id)
         if not agent:
             raise KeyError("Agent not found")
