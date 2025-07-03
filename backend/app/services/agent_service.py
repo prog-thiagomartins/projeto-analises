@@ -1,7 +1,11 @@
 from __future__ import annotations
 from typing import Dict, List
 
+from fastapi import UploadFile
+
 from ..models.agent import Agent, AgentCreate
+from ..models.document import Document
+from .document_service import DocumentService
 
 try:
     from crewai import Agent as CrewAgent, Task, Crew
@@ -18,10 +22,13 @@ class AgentService:
 
     def __init__(self) -> None:
         self.agents: Dict[str, Agent] = {}
+        self.contexts: Dict[str, List[Document]] = {}
+        self.doc_service = DocumentService()
 
     def create_agent(self, data: AgentCreate) -> Agent:
         agent = Agent.from_create(data)
         self.agents[agent.id] = agent
+        self.contexts[agent.id] = []
         return agent
 
     def list_agents(self) -> List[Agent]:
@@ -30,10 +37,24 @@ class AgentService:
     def get_agent(self, agent_id: str) -> Agent | None:
         return self.agents.get(agent_id)
 
+    def add_context(self, agent_id: str, files: List[UploadFile]) -> List[Document]:
+        agent = self.get_agent(agent_id)
+        if not agent:
+            raise KeyError("Agent not found")
+
+        docs = [self.doc_service.parse_file(f) for f in files]
+        self.contexts.setdefault(agent_id, []).extend(docs)
+        agent.context_docs.extend([d.id for d in docs])
+        agent.context_files.extend([d.name for d in docs])
+        return docs
+
     def ask_agent(self, agent_id: str, question: str) -> str:
         agent = self.get_agent(agent_id)
         if not agent:
             raise KeyError("Agent not found")
+
+        docs = self.contexts.get(agent_id, [])
+        context_names = ", ".join(d.name for d in docs) if docs else "sem contexto"
 
         # Basic CrewAI integration example
         if CrewAgent and tool:
@@ -55,5 +76,8 @@ class AgentService:
             except Exception:
                 pass
 
-        # Fallback simulated response
-        return f"Agente '{agent.name}' responde de acordo com o objetivo '{agent.objective}'. Pergunta: '{question}'"
+        # Fallback simulated response using uploaded context
+        return (
+            f"Agente '{agent.name}' responde com base em {context_names}. "
+            f"Pergunta: '{question}'"
+        )

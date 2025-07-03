@@ -15,6 +15,7 @@ class Agent(BaseModel):
     description: str
     objective: str
     context_files: List[str] = []
+    context_docs: List[str] = []
 
     @classmethod
     def from_create(cls, data: AgentCreate) -> "Agent":
