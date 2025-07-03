@@ -1,3 +1,5 @@
+"""Models used for asking questions and returning answers."""
+
 from datetime import datetime
 from pydantic import BaseModel, Field
 

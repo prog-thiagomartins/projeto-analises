@@ -1,3 +1,5 @@
+"""Routes for agent management and interaction."""
+
 from fastapi import APIRouter, HTTPException, UploadFile, File
 
 from ...models.agent import Agent, AgentCreate

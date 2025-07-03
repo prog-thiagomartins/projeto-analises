@@ -1,3 +1,5 @@
+"""Models for representing uploaded documents."""
+
 from __future__ import annotations
 from pydantic import BaseModel, Field
 from uuid import uuid4

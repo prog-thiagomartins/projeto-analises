@@ -1,3 +1,5 @@
+"""Example interaction routes using the legacy agent storage."""
+
 from fastapi import APIRouter, HTTPException
 
 from ..agents.routes import AGENTS

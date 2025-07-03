@@ -1,3 +1,5 @@
+"""Pydantic models representing agents and their creation payloads."""
+
 from __future__ import annotations
 from pydantic import BaseModel, Field
 from typing import List
