@@ -1,9 +1,11 @@
 import { create } from 'zustand'
 
-interface Agent {
+export interface Agent {
   id: string
   name: string
   description: string
+  objective: string
+  context_files: string[]
 }
 
 interface Store {
