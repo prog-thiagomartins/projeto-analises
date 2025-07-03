@@ -1,6 +1,6 @@
 # SheetMind
 
-SheetMind é um sistema SaaS para diagnóstico inteligente de planilhas e documentos financeiros utilizando agentes personalizados com IA.
+SheetMind é um SaaS para diagnóstico inteligente de planilhas e documentos financeiros. Esta versão inclui a base para utilização de agentes com CrewAI e estrutura inicial para integração com Docling.
 
 ## Instalação
 
@@ -22,8 +22,27 @@ npm install
 npm run dev
 ```
 
-## Funcionalidades iniciais
+## Exemplos de uso da API
 
-- Upload de arquivos `.xlsx`, `.csv` e `.pdf`.
-- Criação de agentes personalizados.
-- Chat com agentes (respostas simuladas).
+### Criar agente
+
+```http
+POST /agents
+{
+  "name": "Finance Bot",
+  "description": "Auxilia na análise de planilhas",
+  "objective": "Responder dúvidas financeiras",
+  "context_files": ["demo.xlsx"]
+}
+```
+
+### Perguntar ao agente
+
+```http
+POST /agents/{agent_id}/ask
+{
+  "question": "Qual o lucro deste mês?"
+}
+```
+
+As respostas ainda são simuladas, mas a estrutura está pronta para evolução com CrewAI e Docling.
