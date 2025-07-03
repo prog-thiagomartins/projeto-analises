@@ -1,25 +1,49 @@
 from __future__ import annotations
+
+from pathlib import Path
 from typing import Dict, List
 
-from ..models.document import Document, DocumentCreate
+from fastapi import UploadFile
 
-class DoclingParser:
-    """Placeholder for Docling integration."""
-
-    def parse(self, content: str) -> str:
-        # In real scenario this would parse the content using Docling
-        return content
+from ..models.document import Document
+from ..parsers.base_parser import BaseParser
+from ..parsers.excel_parser import ExcelParser
+from ..parsers.csv_parser import CSVParser
+from ..parsers.pdf_parser import PDFParser
 
 
 class DocumentService:
+    """Service responsible for parsing and storing documents in memory."""
+
     def __init__(self) -> None:
         self.documents: Dict[str, Document] = {}
-        self.parser = DoclingParser()
+        self.parsers: Dict[str, BaseParser] = {
+            ".xlsx": ExcelParser(),
+            ".csv": CSVParser(),
+            ".pdf": PDFParser(),
+        }
 
-    def add_document(self, data: DocumentCreate) -> Document:
-        doc = Document.from_create(data)
-        # Mock parsing step
-        doc.content = self.parser.parse(doc.content)
+    def _select_parser(self, suffix: str) -> BaseParser:
+        parser = self.parsers.get(suffix)
+        if not parser:
+            raise ValueError(f"Unsupported file type: {suffix}")
+        return parser
+
+    def parse_file(self, file: UploadFile) -> Document:
+        """Parse an uploaded file and store it as a Document."""
+        suffix = Path(file.filename).suffix.lower()
+        parser = self._select_parser(suffix)
+        content = parser.parse(file)
+        doc = Document(name=file.filename, content=content)
+        self.documents[doc.id] = doc
+        return doc
+
+    def add_document(self, data: Document | DocumentCreate) -> Document:
+        """Store a document created externally or from raw data."""
+        if isinstance(data, Document):
+            doc = data
+        else:
+            doc = Document.from_create(data)
         self.documents[doc.id] = doc
         return doc
 

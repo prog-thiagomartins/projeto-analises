@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, File
 
 from ...models.agent import Agent, AgentCreate
 from ...models.message import Question, Answer
+from ...models.document import Document
 from ...services.agent_service import AgentService
 
 router = APIRouter()
@@ -21,6 +22,15 @@ def get_agent(agent_id: str):
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
     return agent
+
+
+@router.post("/{agent_id}/context", response_model=list[Document])
+def upload_context(agent_id: str, files: list[UploadFile] = File(...)):
+    try:
+        docs = service.add_context(agent_id, files)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return docs
 
 @router.post("/{agent_id}/ask", response_model=Answer)
 def ask_agent(agent_id: str, question: Question):
