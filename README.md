@@ -30,6 +30,15 @@ npm install
 npm run dev
 ```
 
+### Script de preparação
+
+Se preferir, utilize o script `setup.sh` na raiz do projeto para instalar todas
+as dependências do back-end e do front-end de uma só vez:
+
+```bash
+./setup.sh
+```
+
 ### Fluxo principal
 
 1. **Upload** – o usuário seleciona arquivos relacionados ao agente.
