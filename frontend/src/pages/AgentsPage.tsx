@@ -8,7 +8,11 @@ export default function AgentsPage() {
   const { agents, setAgents } = useStore()
 
   useEffect(() => {
-    listAgents().then(setAgents)
+    listAgents().then(data => {
+      if (Array.isArray(data)) {
+        setAgents(data)
+      }
+    })
   }, [setAgents])
 
   return (

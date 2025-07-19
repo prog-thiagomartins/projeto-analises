@@ -8,11 +8,23 @@ export interface Question {
   question: string;
 }
 
-const BASE_URL = '';
+// Base URL of the FastAPI server
+// During development the backend runs on port 8000
+// so we need to prefix requests accordingly.
+const BASE_URL = 'http://localhost:8000';
 
 export async function listAgents() {
-  const res = await fetch(`${BASE_URL}/agents`);
-  return res.json();
+  try {
+    const res = await fetch(`${BASE_URL}/agents`);
+    if (!res.ok) {
+      console.error('Failed to fetch agents', res.status);
+      return [];
+    }
+    return await res.json();
+  } catch (err) {
+    console.error('Error fetching agents', err);
+    return [];
+  }
 }
 
 export async function createAgent(data: AgentCreate) {
