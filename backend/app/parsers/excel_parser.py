@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-import pandas as pd
+try:
+    import pandas as pd  # type: ignore
+except Exception:  # pragma: no cover - pandas may not be installed
+    pd = None  # type: ignore
 from fastapi import UploadFile
 from typing import Any
 
@@ -23,5 +26,7 @@ class ExcelParser(BaseParser):
     """Parse .xlsx files into Docling Table structures."""
 
     def parse(self, file: UploadFile) -> Any:
+        if pd is None:  # pragma: no cover - handled when pandas is unavailable
+            raise RuntimeError("pandas is required to parse Excel files")
         df = pd.read_excel(file.file)
         return Table(df)
